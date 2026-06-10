@@ -30,7 +30,7 @@ pipeline {
                     sh "docker build -t ${dockerImageName} ."
                     
                     // Authenticate and push
-                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials-id', 
+                    withCredentials([usernamePassword(credentialsId: 'my-docker-credentials', 
                                                       usernameVariable: 'DOCKER_USER', 
                                                       passwordVariable: 'DOCKER_PASS')]) {
                         
