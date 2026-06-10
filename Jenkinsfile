@@ -33,7 +33,18 @@ pipeline {
                     sh "docker build -t ${dockerImageName} ."
                     
                     // Push the image (Ensure your agent is logged into the registry or use a credentials block)
-                    sh "docker push ${dockerImageName}"
+                   withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials-id', 
+                                              usernameVariable: 'DOCKER_USER', 
+                                              passwordVariable: 'DOCKER_PASS')]) {
+                
+                // Login via stdin (safe way to pass password)
+                sh "echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin"
+                
+                // Push the image now that the 'jenkins' user is authorized
+                sh "docker push ${dockerImageName}"
+                
+                // Logout to clean up credentials on the agent
+                sh "docker logout"
                 }
             }
         }
