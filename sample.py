@@ -1,3 +1,6 @@
 print("Hello, World!")
 print("dear gojhvjhvjhd")
 print("dear gojhvjhvjhdsdbhbhjn fdfsdfsdf")
+print("Hello, World!")
+print("dear gojhvjhvjhd")
+print("dear gojhvjhvjhdsdbhbhjn fdfsdfsdf")
