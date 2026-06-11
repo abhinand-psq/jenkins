@@ -24,7 +24,7 @@ pipeline {
             steps {
                 echo 'Building and pushing Docker image...'
                 script { // ---> Opened script block
-                    def dockerImageName = "abhinandp123/nodejs_jenkins:1.0"
+                    def dockerImageName = "abhinandp123/abhinand_jenkins:4.0"
                     
                     // Build the image
                     sh "docker build -t ${dockerImageName} ."
