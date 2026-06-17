@@ -5,6 +5,23 @@ pipeline {
 
     stages {
 
+        stage('Debug') {
+    steps {
+        sh '''
+        whoami
+        pwd
+        echo $HOME
+
+        which kubectl
+        kubectl config view
+        kubectl config current-context
+        kubectl get nodes
+        '''
+    }
+}
+
+        
+
         stage('Clone Repository') {
             steps {
                 sh '''
