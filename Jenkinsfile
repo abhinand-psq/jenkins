@@ -3,14 +3,17 @@ pipeline {
         label 'hello_dear'
     }
 
+    // This block tells Jenkins to activate whenever GitHub pokes it
+    triggers {
+        githubPush()
+    }
+
     stages {
-
-        stage('Clone Repository') {
+        stage('Deploy to Kubernetes') {
             steps {
+                // No manual git clone needed! Jenkins already downloaded your repo.
                 sh '''
-                git clone https://github.com/abhinand-psq/jenkins.git
-                cd jenkins
-
+                echo "Deploying manifests..."
                 kubectl apply -f deployment.yaml
                 kubectl apply -f service.yaml
 
@@ -20,19 +23,17 @@ pipeline {
                 echo "===== Pods ====="
                 kubectl get pods -o wide
 
-                echo "===== Services ===== ffgfgf"
+                echo "===== Services ====="
                 kubectl get svc
                 '''
             }
         }
-
     }
 
     post {
         success {
             echo 'Deployment Successful!'
         }
-
         failure {
             echo 'Deployment Failed!'
         }
