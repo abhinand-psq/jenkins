@@ -20,7 +20,7 @@ pipeline {
                 echo "===== Pods ====="
                 kubectl get pods -o wide
 
-                echo "===== Services ====="
+                echo "===== Services ===== ffgfgf"
                 kubectl get svc
                 '''
             }
