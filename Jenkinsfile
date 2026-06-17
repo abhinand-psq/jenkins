@@ -1,60 +1,40 @@
 pipeline {
     agent {
-        node {
-            label 'abhinand'
-        }
+        label 'hello_dear'
     }
 
     stages {
-        stage('Git Clone') {
+
+        stage('Clone Repository') {
             steps {
-                echo 'Cloning repository...'
-                git branch: 'main', url: 'https://github.com/abhinand-psq/jenkins.git'
+                sh '''
+                git clone https://github.com/abhinand-psq/jenkins.git
+                cd jenkins
+
+                kubectl apply -f deployment.yaml
+                kubectl apply -f service.yaml
+
+                echo "===== Nodes ====="
+                kubectl get nodes
+
+                echo "===== Pods ====="
+                kubectl get pods -o wide
+
+                echo "===== Services ====="
+                kubectl get svc
+                '''
             }
         }
 
-        stage('check python exit') {
-            steps {
-                echo 'checking python exist'
-                sh 'python3 --version'
-            }
-        }
-
-        stage('Docker Build & Push') {
-            steps {
-                echo 'Building and pushing Docker image...'
-                script { // ---> Opened script block
-                    def dockerImageName = "abhinandp123/abhinand_jenkins:4.0"
-                    
-                    // Build the image
-                    sh "docker build -t ${dockerImageName} ."
-                    
-                    // Authenticate and push
-                    withCredentials([usernamePassword(credentialsId: 'my-docker-credentials', 
-                                                      usernameVariable: 'DOCKER_USER', 
-                                                      passwordVariable: 'DOCKER_PASS')]) {
-                        
-                        // Using single quotes avoids shell escaping headaches with $DOCKER_PASS
-                        sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
-                        
-                        sh "docker push ${dockerImageName}"
-                        
-                        sh "docker logout"
-                    }
-                } // ---> Added missing closing brace for script block
-            }
-        }
     }
 
     post {
-        always {
-            echo 'Pipeline execution finished.'
-        }
         success {
-            echo 'Pipeline succeeded!'
+            echo 'Deployment Successful!'
         }
+
         failure {
-            echo 'Pipeline failed. Check the logs.'
+            echo 'Deployment Failed!'
         }
     }
 }
